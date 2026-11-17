@@ -1,0 +1,15 @@
+name: build
+on: workflow_dispatch
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mymindstorm/setup-emsdk@v14
+      - run: emcc -O3 -std=c++17 -DNDEBUG atelier4.cpp -o atelier4.js -sEXPORTED_FUNCTIONS=_main,_atelier_cmd -sEXPORTED_RUNTIME_METHODS=ccall -sALLOW_MEMORY_GROWTH=1 -sINITIAL_MEMORY=128MB -sSTACK_SIZE=4MB -sENVIRONMENT=web,worker,node -sEXIT_RUNTIME=0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: atelier4-wasm
+          path: |
+            atelier4.js
+            atelier4.wasm
